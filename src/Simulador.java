@@ -9,29 +9,23 @@ public class Simulador {
     //max value
     final static double m = 32768;
     //semente
-    double x;
+    double semente;
+
+//    int numServidores, capacidadeFila;
+
+
 
     public Simulador(int semente){
         //semente is equal to half of the max value
-        x = semente;
+        this.semente = semente;
+//        this.numServidores = numServidores;
+//        this.capacidadeFila = capacidadeFila;
     }
 
     public double random() {
-        x = (a * x + b) % m;
-        x = x/m;
-        return x;
+        semente = (a * semente + b) % m;
+        semente = semente/m;
+        return semente;
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("digite a semente");
-        int semente = sc.nextInt();
-
-        Simulador simulator = new Simulador(semente);
-
-        for (int i = 0; i < 20; i++) {
-            System.out.println (simulator.random());
-        }
-
-    }
 }
