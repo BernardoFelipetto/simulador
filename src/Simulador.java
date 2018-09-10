@@ -11,12 +11,9 @@ public class Simulador {
     //semente
     double semente;
 
-//    int numServidores, capacidadeFila;
-
-
+//  int numServidores, capacidadeFila;
 
     public Simulador(int semente){
-        //semente is equal to half of the max value
         this.semente = semente;
 //        this.numServidores = numServidores;
 //        this.capacidadeFila = capacidadeFila;
