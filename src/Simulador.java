@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Simulador {
@@ -11,13 +12,31 @@ public class Simulador {
     //semente
     double semente;
 
-//  int numServidores, capacidadeFila;
+    ArrayList<Evento> 
+
 
     public Simulador(int semente){
         this.semente = semente;
-//        this.numServidores = numServidores;
-//        this.capacidadeFila = capacidadeFila;
     }
+
+    public void simulaFila(Fila fila){
+        ArrayList<Evento> filaEventos = fila.getListaEventos();
+
+        for(int i = 0; i<10; i++){
+
+            if(filaEventos.size() == 0){
+
+            }
+
+        }
+
+    }
+
+    public void agenda(Evento evento){
+
+    }
+
+
 
     public double random() {
         semente = (a * semente + b) % m;

@@ -13,17 +13,26 @@ public class App {
         System.out.println("digite a capacidade da fila");
         int capacidade = sc.nextInt();
 
-        System.out.println("digite o tempo de chegada");
-        int chegada = sc.nextInt();
+        System.out.println("digite o tempo de chegada Minimo");
+        int chegadaMin = sc.nextInt();
 
-        System.out.println("digite o tempo de atendimento");
-        int atendimento = sc.nextInt();
+        System.out.println("digite o tempo de chegada Maximo");
+        int chegadaMax = sc.nextInt();
 
-        Simulador simulator = new Simulador(semente);
-        Fila fila = new Fila(servidores, capacidade, chegada, atendimento);
+        System.out.println("digite o tempo de atendimento Minimo");
+        int atendimentoMin = sc.nextInt();
+
+        System.out.println("digite o tempo de atendimento Maximo");
+        int atendimentoMax = sc.nextInt();
+
+        Simulador simulador = new Simulador(semente);
+
+        Fila fila = new Fila(servidores, capacidade, chegadaMin, chegadaMax, atendimentoMin, atendimentoMax);
+
+        simulador.simulaFila(fila);
 
         for (int i = 0; i < 20; i++) {
-            System.out.println (simulator.random());
+            System.out.println (simulador.random());
         }
     }
 }
