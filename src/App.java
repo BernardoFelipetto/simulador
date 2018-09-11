@@ -29,7 +29,7 @@ public class App {
 
         Fila fila = new Fila(servidores, capacidade, chegadaMin, chegadaMax, atendimentoMin, atendimentoMax);
 
-        simulador.simulaFila(fila);
+        simulador.simularFila(fila, 2);
 
         for (int i = 0; i < 20; i++) {
             System.out.println (simulador.random());

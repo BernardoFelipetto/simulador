@@ -1,13 +1,18 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Fila {
+
+
     private int numServidores, numCapacidade, tempoChegadaMin, tempoChegadaMax, tempoAtendimentoMin, tempoAtendimentoMax;
-    private ArrayList<Evento> fila;
+    private ArrayList<Evento> agenda;
+    private Queue<Cliente> fila;
 
     public Fila(int numServidores, int numCapacidade, int tempoChegadaMin, int tempoChegadaMax, int tempoAtendimentoMin, int tempoAtendimentoMax) {
 
-        ArrayList<Evento> fila = new ArrayList<Evento>();
-
+        this.agenda = new ArrayList<Evento>();
+        this.fila = new LinkedList<Cliente>();
         this.numServidores = numServidores;
         this.numCapacidade = numCapacidade;
         this.tempoChegadaMin = tempoChegadaMin;
@@ -17,8 +22,25 @@ public class Fila {
 
     }
 
-    public ArrayList<Evento> getListaEventos(){
+    public ArrayList<Evento> getAgendaEventos(){
+        return agenda;
+    }
+
+    public void addEventoEmAgenda(Evento evento) {
+        agenda.add(evento);
+        //chamar função de ordenação para ordenar eventos
+    }
+
+    public Queue<Cliente> getFila() {
         return fila;
+    }
+
+    public void addClienteAFila() {
+        this.fila.add(new Cliente());
+    }
+
+    public void removerClienteDeFila() {
+        this.fila.poll();
     }
 
     public int getNumServidores() {
