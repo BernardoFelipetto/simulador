@@ -11,25 +11,20 @@ public class Simulador {
     //semente
     double semente;
 
-    double tempoUltimoEvento;
 
     Fila fila;
-
-
-//    ArrayList<Evento>
 
 
     public Simulador(int semente){
         this.semente = semente;
     }
 
-    public void simularFila(Fila fila, int chegadaInicial) {
+    public void simularFila(Fila fila, double chegadaInicial) {
         this.fila = fila;
         //primeira inserção na Agenda, chegada inicial é dada e sorteio é nulo
         fila.addEventoEmAgenda(new Evento(EventoEnum.CHEGADA, chegadaInicial));
-        tempoUltimoEvento = chegadaInicial;
         fila.addClienteAFila();
-        fila.addEventoEmAgenda(new Evento(EventoEnum.SAIDA, calcularTempo(tempoUltimoEvento)));
+        fila.addEventoEmAgenda(criarEventoSaida(chegadaInicial));
 
         for(int i = 0; i<10; i++){
             Evento evento = fila.getAgendaEventos().remove(0);
@@ -47,37 +42,38 @@ public class Simulador {
     }
 
     public void chegar(Evento evento) {
-        double tempo = calcularTempo(tempoUltimoEvento);
+        double tempo = evento.tempo;
         if (fila.getFila().size() < fila.getNumCapacidade()) {
             fila.addClienteAFila();
             if (fila.getFila().size() <= fila.getNumServidores()) {
-                fila.addEventoEmAgenda(new Evento(EventoEnum.SAIDA, tempo ));
+                Evento saida = criarEventoSaida(tempo);
+                fila.addEventoEmAgenda(saida);
             }
         }
-        fila.addEventoEmAgenda(new Evento(EventoEnum.CHEGADA, tempo));
-        tempoUltimoEvento = tempo;
+        Evento chegada = criarEventoChegada(tempo);
+        fila.addEventoEmAgenda(chegada);
     }
 
     public void sair(Evento evento) {
+        double tempo = evento.tempo;
         fila.removerClienteDeFila();
-        if (fila.getFila().size() >= 1) {
-            fila.addEventoEmAgenda(new Evento(EventoEnum.SAIDA, calcularTempo(tempoUltimoEvento)));
+        if (fila.getFila().size() >= fila.getNumServidores()) {
+            fila.addEventoEmAgenda(criarEventoSaida(tempo));
         }
     }
-//
-//    public void agendarEntrada(Fila fila, double tempoChegada) {
-//        fila.addEventoEmAgenda(new Evento(EventoEnum.CHEGADA, tempoChegada));
-//        tempoUltimoEvento = tempoChegada;
-//        fila.addClienteAFila();
-//    }
 
-    public void agenda(Evento evento){
-
+    private Evento criarEventoChegada(double tempoEvento) {
+        semente = random();
+        double sorteio = ((fila.getTempoChegadaMax() - fila.getTempoChegadaMin()) * semente) + fila.getTempoChegadaMin();
+        double tempo = tempoEvento + sorteio;
+        return new Evento(EventoEnum.CHEGADA, tempo, sorteio);
     }
 
-    private double calcularTempo(double tempoAnterior) {
+    private Evento criarEventoSaida(double tempoEvento) {
         semente = random();
-        return tempoAnterior + semente;
+        double sorteio = ((fila.getTempoAtendimentoMax() - fila.getTempoAtendimentoMin()) * semente) + fila.getTempoAtendimentoMin();
+        double tempo = tempoEvento + sorteio;
+        return new Evento(EventoEnum.SAIDA, tempo, sorteio);
     }
 
     public double random() {
