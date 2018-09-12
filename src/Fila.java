@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 public class Fila {
 
@@ -29,6 +31,8 @@ public class Fila {
     public void addEventoEmAgenda(Evento evento) {
         agenda.add(evento);
         //chamar função de ordenação para ordenar eventos
+        mergeSort(agenda);
+
     }
 
     public Queue<Cliente> getFila() {
@@ -40,7 +44,8 @@ public class Fila {
     }
 
     public void removerClienteDeFila() {
-        this.fila.poll();
+        Cliente cliente = this.fila.poll();
+        System.out.println("Removido cliente " + cliente.getId());
     }
 
     public int getNumServidores() {
@@ -90,4 +95,33 @@ public class Fila {
     public void setTempoAtendimentoMax(int tempoAtendimentoMax) {
         this.tempoAtendimentoMax = tempoAtendimentoMax;
     }
+
+
+    public List<Evento> mergeSort(List<Evento> eventos) {
+        List<Evento> primeiraMetade = new ArrayList<Evento>();;
+        List<Evento> segundaMetade = new ArrayList<Evento>();;
+        if (eventos.size() > 2) {
+            int divisao = eventos.size() / 2;
+            primeiraMetade = eventos.subList(0, divisao - 1);
+            segundaMetade = eventos.subList(divisao, eventos.size() - 1);
+        }
+        else if(eventos.size() == 2) {
+            primeiraMetade.add(eventos.get(0));
+            segundaMetade.add(eventos.get(1));
+
+        }
+        List<Evento> retorno = new ArrayList<Evento>();
+        for (int i = 0; i < primeiraMetade.size(); i++) {
+            if (primeiraMetade.get(i).tempo < segundaMetade.get(i).tempo) {
+                retorno.add(primeiraMetade.get(i));
+                retorno.add(segundaMetade.get(i));
+            } else {
+                retorno.add(segundaMetade.get(i));
+                retorno.add(primeiraMetade.get(i));
+            }
+        }
+        return retorno;
+    }
+
+
 }

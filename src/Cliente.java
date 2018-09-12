@@ -5,6 +5,7 @@ public class Cliente {
     public Cliente() {
         idCount++;
         this.id = idCount;
+        System.out.println("inserido cliente " + this.id);
     }
 
     public int getId() {
