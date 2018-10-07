@@ -34,11 +34,10 @@ public class App {
 
         List<Fila> filas = new ArrayList<Fila>();
 
+        // inicializanco as filas
         for(int i = 0; i < numFilas; i++) {
             filas.add(new Fila(servidores, capacidade, chegadaMin, chegadaMax, atendimentoMin, atendimentoMax));
         }
-
-//        Fila fila = new Fila(servidores, capacidade, chegadaMin, chegadaMax, atendimentoMin, atendimentoMax);
 
         simulador.simularFila(filas, 2);
 

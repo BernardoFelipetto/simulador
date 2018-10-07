@@ -1,19 +1,20 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
 public class Fila {
 
-
+    // Usado para atribuir o valor ao id da fila, incrementando a cada fila criada
+    public static int idFila = 0;
+    // Usado como identificador da fila, começando por 1
+    private int id;
     private int numServidores, numCapacidade, tempoChegadaMin, tempoChegadaMax, tempoAtendimentoMin, tempoAtendimentoMax;
-    private ArrayList<Evento> agenda;
     private Queue<Cliente> fila;
 
     public Fila(int numServidores, int numCapacidade, int tempoChegadaMin, int tempoChegadaMax, int tempoAtendimentoMin, int tempoAtendimentoMax) {
-
-        this.agenda = new ArrayList<Evento>();
+        idFila++;
+        this.id = idFila;
         this.fila = new LinkedList<Cliente>();
         this.numServidores = numServidores;
         this.numCapacidade = numCapacidade;
@@ -21,34 +22,14 @@ public class Fila {
         this.tempoChegadaMax = tempoChegadaMax;
         this.tempoAtendimentoMin = tempoAtendimentoMin;
         this.tempoAtendimentoMax = tempoAtendimentoMax;
-
-    }
-
-    public ArrayList<Evento> getAgendaEventos(){
-        return agenda;
-    }
-
-    public void addEventoEmAgenda(Evento novoEvento) {
-//        agenda.add(evento);
-        if (this.agenda.isEmpty()) {
-            agenda.add(novoEvento);
-        }
-        else {
-            for (Evento evento: this.agenda) {
-                if (evento.tempo > novoEvento.tempo){
-                    agenda.add(agenda.indexOf(evento), novoEvento);
-                    return;
-                }
-            }
-            agenda.add(novoEvento);
-        }
-        //chamar função de ordenação para ordenar eventos
-//        mergeSort(agenda);
-
     }
 
     public Queue<Cliente> getFila() {
         return fila;
+    }
+
+    public void addClienteAFila(Cliente cliente) {
+        this.fila.add(cliente);
     }
 
     public Cliente addClienteAFila() {
@@ -60,6 +41,10 @@ public class Fila {
     public Cliente removerClienteDeFila() {
         return this.fila.poll();
 //        System.out.println("Removido cliente " + cliente.getId());
+    }
+
+    public int getId() {
+        return this.id;
     }
 
     public int getNumServidores() {
@@ -111,31 +96,31 @@ public class Fila {
     }
 
 
-    public List<Evento> mergeSort(List<Evento> eventos) {
-        List<Evento> primeiraMetade = new ArrayList<Evento>();;
-        List<Evento> segundaMetade = new ArrayList<Evento>();;
-        if (eventos.size() > 2) {
-            int divisao = eventos.size() / 2;
-            primeiraMetade = eventos.subList(0, divisao - 1);
-            segundaMetade = eventos.subList(divisao, eventos.size() - 1);
-        }
-        else if(eventos.size() == 2) {
-            primeiraMetade.add(eventos.get(0));
-            segundaMetade.add(eventos.get(1));
-
-        }
-        List<Evento> retorno = new ArrayList<Evento>();
-        for (int i = 0; i < primeiraMetade.size(); i++) {
-            if (primeiraMetade.get(i).tempo < segundaMetade.get(i).tempo) {
-                retorno.add(primeiraMetade.get(i));
-                retorno.add(segundaMetade.get(i));
-            } else {
-                retorno.add(segundaMetade.get(i));
-                retorno.add(primeiraMetade.get(i));
-            }
-        }
-        return retorno;
-    }
+//    public List<Evento> mergeSort(List<Evento> eventos) {
+//        List<Evento> primeiraMetade = new ArrayList<Evento>();;
+//        List<Evento> segundaMetade = new ArrayList<Evento>();;
+//        if (eventos.size() > 2) {
+//            int divisao = eventos.size() / 2;
+//            primeiraMetade = eventos.subList(0, divisao - 1);
+//            segundaMetade = eventos.subList(divisao, eventos.size() - 1);
+//        }
+//        else if(eventos.size() == 2) {
+//            primeiraMetade.add(eventos.get(0));
+//            segundaMetade.add(eventos.get(1));
+//
+//        }
+//        List<Evento> retorno = new ArrayList<Evento>();
+//        for (int i = 0; i < primeiraMetade.size(); i++) {
+//            if (primeiraMetade.get(i).tempo < segundaMetade.get(i).tempo) {
+//                retorno.add(primeiraMetade.get(i));
+//                retorno.add(segundaMetade.get(i));
+//            } else {
+//                retorno.add(segundaMetade.get(i));
+//                retorno.add(primeiraMetade.get(i));
+//            }
+//        }
+//        return retorno;
+//    }
 
 
 }
