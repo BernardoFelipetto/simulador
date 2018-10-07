@@ -1,4 +1,5 @@
 import Enum.EventoEnum;
+import java.util.List;
 
 public class Simulador {
 
@@ -19,16 +20,17 @@ public class Simulador {
         this.semente = semente;
     }
 
-    public void simularFila(Fila fila, double chegadaInicial) {
-        this.fila = fila;
+    public void simularFila(List<Fila> filas, double chegadaInicial) {
+        this.fila = filas.get(0);
         //primeira inserção na Agenda, chegada inicial é dada e sorteio é nulo
+        Evento evento = new Evento(EventoEnum.CHEGADA, chegadaInicial);
         fila.addEventoEmAgenda(new Evento(EventoEnum.CHEGADA, chegadaInicial));
-        fila.addClienteAFila();
-        fila.addEventoEmAgenda(criarEventoSaida(chegadaInicial));
+//        fila.addClienteAFila();
+//        fila.addEventoEmAgenda(criarEventoSaida(chegadaInicial));
 
-        for(int i = 0; i<10; i++){
-            Evento evento = fila.getAgendaEventos().remove(0);
-            executarEvento(evento);
+        for(int i = 0; i<20; i++) {
+            Evento proximoEvento = fila.getAgendaEventos().remove(0);
+            executarEvento(proximoEvento);
         }
 
     }
@@ -44,7 +46,8 @@ public class Simulador {
     public void chegar(Evento evento) {
         double tempo = evento.tempo;
         if (fila.getFila().size() < fila.getNumCapacidade()) {
-            fila.addClienteAFila();
+            Cliente cliente = fila.addClienteAFila();
+            System.out.println("inserido cliente " + cliente.getId() + " - tamanho da fila: " + fila.getFila().size() + " - tempo do evento: " + tempo);
             if (fila.getFila().size() <= fila.getNumServidores()) {
                 Evento saida = criarEventoSaida(tempo);
                 fila.addEventoEmAgenda(saida);
@@ -54,9 +57,14 @@ public class Simulador {
         fila.addEventoEmAgenda(chegada);
     }
 
+    public void proximaFila() {
+
+    }
+
     public void sair(Evento evento) {
         double tempo = evento.tempo;
-        fila.removerClienteDeFila();
+        Cliente cliente = fila.removerClienteDeFila();
+        System.out.println("removendo cliente " + cliente.getId() + " - tamanho da fila: " + fila.getFila().size() + " - tempo do evento: " + tempo);
         if (fila.getFila().size() >= fila.getNumServidores()) {
             fila.addEventoEmAgenda(criarEventoSaida(tempo));
         }

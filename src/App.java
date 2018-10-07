@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 public class App {
 
@@ -25,11 +27,20 @@ public class App {
         System.out.println("digite o tempo de atendimento Maximo");
         int atendimentoMax = sc.nextInt();
 
+        System.out.println("digite o número de filas");
+        int numFilas = sc.nextInt();
+
         Simulador simulador = new Simulador(semente);
 
-        Fila fila = new Fila(servidores, capacidade, chegadaMin, chegadaMax, atendimentoMin, atendimentoMax);
+        List<Fila> filas = new ArrayList<Fila>();
 
-        simulador.simularFila(fila, 2);
+        for(int i = 0; i < numFilas; i++) {
+            filas.add(new Fila(servidores, capacidade, chegadaMin, chegadaMax, atendimentoMin, atendimentoMax));
+        }
+
+//        Fila fila = new Fila(servidores, capacidade, chegadaMin, chegadaMax, atendimentoMin, atendimentoMax);
+
+        simulador.simularFila(filas, 2);
 
         for (int i = 0; i < 20; i++) {
             System.out.println (simulador.random());

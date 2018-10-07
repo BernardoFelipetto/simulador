@@ -28,10 +28,22 @@ public class Fila {
         return agenda;
     }
 
-    public void addEventoEmAgenda(Evento evento) {
-        agenda.add(evento);
+    public void addEventoEmAgenda(Evento novoEvento) {
+//        agenda.add(evento);
+        if (this.agenda.isEmpty()) {
+            agenda.add(novoEvento);
+        }
+        else {
+            for (Evento evento: this.agenda) {
+                if (evento.tempo > novoEvento.tempo){
+                    agenda.add(agenda.indexOf(evento), novoEvento);
+                    return;
+                }
+            }
+            agenda.add(novoEvento);
+        }
         //chamar função de ordenação para ordenar eventos
-        mergeSort(agenda);
+//        mergeSort(agenda);
 
     }
 
@@ -39,13 +51,15 @@ public class Fila {
         return fila;
     }
 
-    public void addClienteAFila() {
-        this.fila.add(new Cliente());
+    public Cliente addClienteAFila() {
+        Cliente cliente = new Cliente();
+        this.fila.add(cliente);
+        return cliente;
     }
 
-    public void removerClienteDeFila() {
-        Cliente cliente = this.fila.poll();
-        System.out.println("Removido cliente " + cliente.getId());
+    public Cliente removerClienteDeFila() {
+        return this.fila.poll();
+//        System.out.println("Removido cliente " + cliente.getId());
     }
 
     public int getNumServidores() {

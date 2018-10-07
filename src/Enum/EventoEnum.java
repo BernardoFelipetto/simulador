@@ -1,5 +1,5 @@
 package Enum;
 
 public enum EventoEnum {
-        CHEGADA, SAIDA
+        CHEGADA, SAIDA, PROXIMA
 }
