@@ -27,12 +27,12 @@ public class Simulador {
     public void simularFila(List<Fila> filas, double chegadaInicial) {
         this.filas = filas;
         //primeira inserção na Agenda, chegada inicial é dada e sorteio é nulo
-        Evento evento = new Evento(EventoEnum.CHEGADA, chegadaInicial, semente, 1, new Cliente());
+        Evento evento = new Evento(EventoEnum.CHEGADA, chegadaInicial, semente, filas.get(0), new Cliente());
         agenda.addEventoEmAgenda(evento);
 
         for(int i = 0; i<20; i++) {
             Evento proximoEvento = agenda.getAgendaEventos().remove(0);
-            Fila fila = this.buscarFilaPorId(proximoEvento.idFila);
+            Fila fila = proximoEvento.fila;
             executarEvento(proximoEvento, fila);
         }
     }
@@ -44,7 +44,7 @@ public class Simulador {
             sair(evento, fila);
         else {
             /* quando for evento de ir para a próxima fila
-            *  primeiro ocorre o evento de sair para a fila anterior,
+            *  primeiro ocorre o evento de sair da fila anterior,
             *  e depois ocorre o evento de prosseguir para a próxima fila */
             Fila filaAnterior = this.filas.get(this.filas.indexOf(fila) - 1);
             sair(evento, filaAnterior);
@@ -54,13 +54,16 @@ public class Simulador {
 
     public void chegar(Evento evento, Fila fila) {
         double tempo = evento.tempo;
+        // se houver espaco na fila, adicionar cliente a fila
         if (fila.getFila().size() < fila.getNumCapacidade()) {
             fila.addClienteAFila(evento.cliente);
             System.out.println("FILA: " + fila.getId());
             System.out.println("inserido cliente " + evento.cliente.getId() + " - tamanho da fila: " + fila.getFila().size() + " - tempo do evento: " + tempo);
+            // Se houver servidor disponível para atender cliente, agendar saída
             if (fila.getFila().size() <= fila.getNumServidores()) {
                 Evento novoEvento;
-                if(evento.idFila == filas.size()){
+                // se esta for a última fila, agenda saída, se não, agenda passagem para próxima fila
+                if(evento.fila.getId() == filas.size()) {
                     novoEvento = criarEventoSaida(evento.cliente, tempo, fila);
                 } else {
                     Fila proximaFila = this.filas.get(this.filas.indexOf(fila) + 1);
@@ -99,29 +102,21 @@ public class Simulador {
         semente = random();
         double sorteio = ((fila.getTempoChegadaMax() - fila.getTempoChegadaMin()) * semente) + fila.getTempoChegadaMin();
         double tempo = tempoEvento + sorteio;
-        return new Evento(EventoEnum.PROXIMA, tempo, sorteio, fila.getId(), cliente);
+        return new Evento(EventoEnum.PROXIMA, tempo, sorteio, fila, cliente);
     }
 
     private Evento criarEventoChegada(double tempoEvento, Fila fila) {
         semente = random();
         double sorteio = ((fila.getTempoChegadaMax() - fila.getTempoChegadaMin()) * semente) + fila.getTempoChegadaMin();
         double tempo = tempoEvento + sorteio;
-        return new Evento(EventoEnum.CHEGADA, tempo, sorteio, fila.getId(), new Cliente());
+        return new Evento(EventoEnum.CHEGADA, tempo, sorteio, fila, new Cliente());
     }
 
     private Evento criarEventoSaida(Cliente cliente, double tempoEvento, Fila fila) {
         semente = random();
         double sorteio = ((fila.getTempoAtendimentoMax() - fila.getTempoAtendimentoMin()) * semente) + fila.getTempoAtendimentoMin();
         double tempo = tempoEvento + sorteio;
-        return new Evento(EventoEnum.SAIDA, tempo, sorteio, fila.getId(), cliente);
-    }
-
-    private Fila buscarFilaPorId(int id) {
-        for(Fila fila: this.filas) {
-            if(fila.getId() == id)
-                return fila;
-        }
-        return null;
+        return new Evento(EventoEnum.SAIDA, tempo, sorteio, fila, cliente);
     }
 
     public double random() {
