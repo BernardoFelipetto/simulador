@@ -57,21 +57,21 @@ public class Simulador {
         // se houver espaco na fila, adicionar cliente a fila
         if (fila.getFila().size() < fila.getNumCapacidade()) {
             fila.addClienteAFila(evento.cliente);
-            System.out.println("FILA: " + fila.getId());
-            System.out.println("inserido cliente " + evento.cliente.getId() + " - tamanho da fila: " + fila.getFila().size() + " - tempo do evento: " + tempo);
             // Se houver servidor disponível para atender cliente, agendar saída
             if (fila.getFila().size() <= fila.getNumServidores()) {
-                Evento novoEvento;
+                Evento novoEvento = criarEventoProximaFila(evento.cliente, tempo, fila);
                 // se esta for a última fila, agenda saída, se não, agenda passagem para próxima fila
-                if(evento.fila.getId() == filas.size()) {
-                    novoEvento = criarEventoSaida(evento.cliente, tempo, fila);
-                } else {
-                    Fila proximaFila = this.filas.get(this.filas.indexOf(fila) + 1);
-                    novoEvento = criarEventoProximaFila(evento.cliente, tempo, proximaFila);
-                }
+//                if(evento.fila.getId() == filas.size()) {
+//                    novoEvento = criarEventoSaida(evento.cliente, tempo, fila);
+//                } else {
+//                    novoEvento = criarEventoProximaFila(evento.cliente, tempo, fila);
+//                }
                 agenda.addEventoEmAgenda(novoEvento);
             }
+            System.out.println("FILA: " + fila.getId());
+            System.out.println("inserido cliente " + evento.cliente.getId() + " - tamanho da fila: " + fila.getFila().size() + " - tempo do evento: " + tempo);
         }
+        // caso seja a primeira fila, criar evento de chegada para a primeira fila
         if (fila.getId() == 1) {
             Evento chegada = criarEventoChegada(tempo, fila);
             agenda.addEventoEmAgenda(chegada);
@@ -81,29 +81,51 @@ public class Simulador {
     public void sair(Evento evento, Fila fila) {
         double tempo = evento.tempo;
         Cliente cliente = fila.removerClienteDeFila();
-        System.out.println("FILA: " + fila.getId());
-        System.out.println("removendo cliente " + cliente.getId() + " - tamanho da fila: " + fila.getFila().size() + " - tempo do evento: " + tempo);
         if (fila.getFila().size() >= fila.getNumServidores()) {
             Cliente proximoASair = fila.getFila().peek();
-            if (fila.getId() == this.filas.size())
+            if (fila.getId() == this.filas.size()) {
                 agenda.addEventoEmAgenda(criarEventoSaida(proximoASair, tempo, fila));
-            else {
-                // se for para agendar uma saida dessa fila para uma próxima, criar um evento do tipo PROXIMO
-                // é importante passar por parâmetro a fila seguinte,
-                // pois o método criarEventoProximaFila considera a fila passada por parâmetro a fila de chegada
-                Fila proximaFila = this.filas.get(this.filas.indexOf(fila) + 1);
-                agenda.addEventoEmAgenda(criarEventoProximaFila(proximoASair, tempo, proximaFila));
             }
+            else {
+                Evento novoEvento = criarEventoProximaFila(proximoASair, tempo, fila);
+//                double rnd = random();
+//                if (rnd < 0.5) {
+//                    // se for para agendar uma saida dessa fila para uma próxima, criar um evento do tipo PROXIMO
+//                    // é importante passar por parâmetro a fila seguinte,
+//                    // pois o método criarEventoProximaFila considera a fila passada por parâmetro a fila de chegada
+//                    Fila proximaFila = this.filas.get(this.filas.indexOf(fila) + 1);
+//                    agenda.addEventoEmAgenda(criarEventoProximaFila(proximoASair, tempo, proximaFila));
+//                }
+//                else {
+//                    agenda.addEventoEmAgenda(criarEventoSaida(proximoASair, tempo, fila));
+//                }
+                agenda.addEventoEmAgenda(novoEvento);
+            }
+        }
+        System.out.println("FILA: " + fila.getId());
+        System.out.println("removendo cliente " + cliente.getId() + " - tamanho da fila: " + fila.getFila().size() + " - tempo do evento: " + tempo);
+    }
 
+//    private Evento criarEventoProximaFila(Cliente cliente, double tempoEvento, Fila fila) {
+//        semente = random();
+//        double sorteio = ((fila.getTempoChegadaMax() - fila.getTempoChegadaMin()) * semente) + fila.getTempoChegadaMin();
+//        double tempo = tempoEvento + sorteio;
+//        return new Evento(EventoEnum.PROXIMA, tempo, sorteio, fila, cliente);
+//    }
+
+    private Evento criarEventoProximaFila(Cliente cliente, double tempoEvento, Fila fila) {
+        double rnd = random();
+        if (rnd < 0.5) {
+            Fila proximaFila = this.filas.get(this.filas.indexOf(fila) + 1);
+            semente = random();
+            double sorteio = ((proximaFila.getTempoChegadaMax() - proximaFila.getTempoChegadaMin()) * semente) + proximaFila.getTempoChegadaMin();
+            double tempo = tempoEvento + sorteio;
+            return new Evento(EventoEnum.PROXIMA, tempo, sorteio, proximaFila, cliente);
+        } else {
+            return criarEventoSaida(cliente, tempoEvento, fila);
         }
     }
 
-    private Evento criarEventoProximaFila(Cliente cliente, double tempoEvento, Fila fila) {
-        semente = random();
-        double sorteio = ((fila.getTempoChegadaMax() - fila.getTempoChegadaMin()) * semente) + fila.getTempoChegadaMin();
-        double tempo = tempoEvento + sorteio;
-        return new Evento(EventoEnum.PROXIMA, tempo, sorteio, fila, cliente);
-    }
 
     private Evento criarEventoChegada(double tempoEvento, Fila fila) {
         semente = random();
