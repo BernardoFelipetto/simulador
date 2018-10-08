@@ -59,13 +59,13 @@ public class Simulador {
             fila.addClienteAFila(evento.cliente);
             // Se houver servidor disponível para atender cliente, agendar saída
             if (fila.getFila().size() <= fila.getNumServidores()) {
-                Evento novoEvento = criarEventoProximaFila(evento.cliente, tempo, fila);
+                Evento novoEvento;
+                if(evento.fila.getId() == filas.size()) {
+                    novoEvento = criarEventoSaida(evento.cliente, tempo, fila);
+                } else {
+                    novoEvento = sortearEntreSaidaEProxima(evento.cliente, tempo, fila);
+                }
                 // se esta for a última fila, agenda saída, se não, agenda passagem para próxima fila
-//                if(evento.fila.getId() == filas.size()) {
-//                    novoEvento = criarEventoSaida(evento.cliente, tempo, fila);
-//                } else {
-//                    novoEvento = criarEventoProximaFila(evento.cliente, tempo, fila);
-//                }
                 agenda.addEventoEmAgenda(novoEvento);
             }
             System.out.println("FILA: " + fila.getId());
@@ -87,40 +87,30 @@ public class Simulador {
                 agenda.addEventoEmAgenda(criarEventoSaida(proximoASair, tempo, fila));
             }
             else {
-                Evento novoEvento = criarEventoProximaFila(proximoASair, tempo, fila);
-//                double rnd = random();
-//                if (rnd < 0.5) {
-//                    // se for para agendar uma saida dessa fila para uma próxima, criar um evento do tipo PROXIMO
-//                    // é importante passar por parâmetro a fila seguinte,
-//                    // pois o método criarEventoProximaFila considera a fila passada por parâmetro a fila de chegada
-//                    Fila proximaFila = this.filas.get(this.filas.indexOf(fila) + 1);
-//                    agenda.addEventoEmAgenda(criarEventoProximaFila(proximoASair, tempo, proximaFila));
-//                }
-//                else {
-//                    agenda.addEventoEmAgenda(criarEventoSaida(proximoASair, tempo, fila));
-//                }
+                Evento novoEvento = sortearEntreSaidaEProxima(proximoASair, tempo, fila);
                 agenda.addEventoEmAgenda(novoEvento);
             }
         }
         System.out.println("FILA: " + fila.getId());
         System.out.println("removendo cliente " + cliente.getId() + " - tamanho da fila: " + fila.getFila().size() + " - tempo do evento: " + tempo);
+        if(evento.evento == EventoEnum.PROXIMA)
+            System.out.println("Cliente " + cliente.getId() + " está indo para a próxima fila" );
+        else
+            System.out.println("Cliente " + cliente.getId() + " está saíndo do sistema de filas");
     }
 
-//    private Evento criarEventoProximaFila(Cliente cliente, double tempoEvento, Fila fila) {
-//        semente = random();
-//        double sorteio = ((fila.getTempoChegadaMax() - fila.getTempoChegadaMin()) * semente) + fila.getTempoChegadaMin();
-//        double tempo = tempoEvento + sorteio;
-//        return new Evento(EventoEnum.PROXIMA, tempo, sorteio, fila, cliente);
-//    }
-
     private Evento criarEventoProximaFila(Cliente cliente, double tempoEvento, Fila fila) {
-        double rnd = random();
-        if (rnd < 0.5) {
+        semente = random();
+        double sorteio = ((fila.getTempoChegadaMax() - fila.getTempoChegadaMin()) * semente) + fila.getTempoChegadaMin();
+        double tempo = tempoEvento + sorteio;
+        return new Evento(EventoEnum.PROXIMA, tempo, sorteio, fila, cliente);
+    }
+
+    private Evento sortearEntreSaidaEProxima(Cliente cliente, double tempoEvento, Fila fila) {
+        semente = random();
+        if (semente < 0.5) {
             Fila proximaFila = this.filas.get(this.filas.indexOf(fila) + 1);
-            semente = random();
-            double sorteio = ((proximaFila.getTempoChegadaMax() - proximaFila.getTempoChegadaMin()) * semente) + proximaFila.getTempoChegadaMin();
-            double tempo = tempoEvento + sorteio;
-            return new Evento(EventoEnum.PROXIMA, tempo, sorteio, proximaFila, cliente);
+            return criarEventoProximaFila(cliente, tempoEvento, proximaFila);
         } else {
             return criarEventoSaida(cliente, tempoEvento, fila);
         }
