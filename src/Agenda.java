@@ -13,6 +13,7 @@ public class Agenda {
         return this.eventos;
     }
 
+    // adicionar evento mantendo-os em ordem
     public void addEventoEmAgenda(Evento novoEvento) {
         if (this.eventos.isEmpty())
             eventos.add(novoEvento);

@@ -24,11 +24,20 @@ public class Simulador {
         this.agenda = new Agenda();
     }
 
-    public void simularFila(List<Fila> filas, double chegadaInicial) {
+    public void simularFila(List<Fila> filas) {
         this.filas = filas;
-        //primeira inserção na Agenda, chegada inicial é dada e sorteio é nulo
-        Evento evento = new Evento(EventoEnum.CHEGADA, chegadaInicial, semente, filas.get(0), new Cliente());
-        agenda.addEventoEmAgenda(evento);
+        //inserir em agendas eventos de chegadas para as filas com chegadas
+        for (Fila fila: filas) {
+            if (fila.getTempoChegadaInicial() != 0) {
+                Evento evento = new Evento(
+                        EventoEnum.CHEGADA,
+                        fila.getTempoChegadaInicial(),
+                        semente,
+                        filas.get(0),
+                        new Cliente());
+                agenda.addEventoEmAgenda(evento);
+            }
+        }
 
         for(int i = 0; i<20; i++) {
             Evento proximoEvento = agenda.getAgendaEventos().remove(0);
@@ -63,7 +72,7 @@ public class Simulador {
                 if(evento.fila.getId() == filas.size()) {
                     novoEvento = criarEventoSaida(evento.cliente, tempo, fila);
                 } else {
-                    novoEvento = sortearEntreSaidaEProxima(evento.cliente, tempo, fila);
+                    novoEvento = sortearEntreSaidaEPassagem(evento.cliente, tempo, fila);
                 }
                 // se esta for a última fila, agenda saída, se não, agenda passagem para próxima fila
                 agenda.addEventoEmAgenda(novoEvento);
@@ -87,7 +96,7 @@ public class Simulador {
                 agenda.addEventoEmAgenda(criarEventoSaida(proximoASair, tempo, fila));
             }
             else {
-                Evento novoEvento = sortearEntreSaidaEProxima(proximoASair, tempo, fila);
+                Evento novoEvento = sortearEntreSaidaEPassagem(proximoASair, tempo, fila);
                 agenda.addEventoEmAgenda(novoEvento);
             }
         }
@@ -99,18 +108,18 @@ public class Simulador {
             System.out.println("Cliente " + cliente.getId() + " está saíndo do sistema de filas");
     }
 
-    private Evento criarEventoProximaFila(Cliente cliente, double tempoEvento, Fila fila) {
+    private Evento criarEventoPassagem(Cliente cliente, double tempoEvento, Fila fila) {
         semente = random();
         double sorteio = ((fila.getTempoChegadaMax() - fila.getTempoChegadaMin()) * semente) + fila.getTempoChegadaMin();
         double tempo = tempoEvento + sorteio;
         return new Evento(EventoEnum.PROXIMA, tempo, sorteio, fila, cliente);
     }
 
-    private Evento sortearEntreSaidaEProxima(Cliente cliente, double tempoEvento, Fila fila) {
+    private Evento sortearEntreSaidaEPassagem(Cliente cliente, double tempoEvento, Fila fila) {
         semente = random();
         if (semente < 0.5) {
             Fila proximaFila = this.filas.get(this.filas.indexOf(fila) + 1);
-            return criarEventoProximaFila(cliente, tempoEvento, proximaFila);
+            return criarEventoPassagem(cliente, tempoEvento, proximaFila);
         } else {
             return criarEventoSaida(cliente, tempoEvento, fila);
         }

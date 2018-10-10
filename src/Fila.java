@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Fila {
@@ -9,10 +7,12 @@ public class Fila {
     public static int idFila = 0;
     // Usado como identificador da fila, começando por 1
     private int id;
-    private int numServidores, numCapacidade, tempoChegadaMin, tempoChegadaMax, tempoAtendimentoMin, tempoAtendimentoMax;
+    // Quando fila não tiver chegada: tempoChegadaMin, tempoChegadaMax e tempoChegadaInicial serão 0
+    private int numServidores, numCapacidade, tempoChegadaMin, tempoChegadaMax, tempoChegadaInicial, tempoAtendimentoMin, tempoAtendimentoMax;
     private Queue<Cliente> fila;
+    private Dictionary<Integer, Double> filasPassagens;
 
-    public Fila(int numServidores, int numCapacidade, int tempoChegadaMin, int tempoChegadaMax, int tempoAtendimentoMin, int tempoAtendimentoMax) {
+    public Fila(int numServidores, int numCapacidade, int tempoChegadaMin, int tempoChegadaMax, int tempoChegadaInicial, int tempoAtendimentoMin, int tempoAtendimentoMax) {
         idFila++;
         this.id = idFila;
         this.fila = new LinkedList<Cliente>();
@@ -20,8 +20,18 @@ public class Fila {
         this.numCapacidade = numCapacidade;
         this.tempoChegadaMin = tempoChegadaMin;
         this.tempoChegadaMax = tempoChegadaMax;
+        this.tempoChegadaInicial = tempoChegadaInicial;
         this.tempoAtendimentoMin = tempoAtendimentoMin;
         this.tempoAtendimentoMax = tempoAtendimentoMax;
+        filasPassagens = new Hashtable<Integer, Double>();
+    }
+
+    public Dictionary<Integer, Double> getFilasPassagensIds() {
+        return filasPassagens;
+    }
+
+    public void addFilaPassagem(int idFila, double prob ) {
+        this.filasPassagens.put(idFila, prob);
     }
 
     public Queue<Cliente> getFila() {
@@ -40,7 +50,6 @@ public class Fila {
 
     public Cliente removerClienteDeFila() {
         return this.fila.poll();
-//        System.out.println("Removido cliente " + cliente.getId());
     }
 
     public int getId() {
@@ -79,6 +88,14 @@ public class Fila {
         this.tempoChegadaMax = tempoChegadaMax;
     }
 
+    public int getTempoChegadaInicial() {
+        return tempoChegadaInicial;
+    }
+
+    public void setTempoChegadaInicial(int tempoChegadaInicial) {
+        this.tempoChegadaInicial = tempoChegadaInicial;
+    }
+
     public int getTempoAtendimentoMin() {
         return tempoAtendimentoMin;
     }
@@ -94,33 +111,5 @@ public class Fila {
     public void setTempoAtendimentoMax(int tempoAtendimentoMax) {
         this.tempoAtendimentoMax = tempoAtendimentoMax;
     }
-
-
-//    public List<Evento> mergeSort(List<Evento> eventos) {
-//        List<Evento> primeiraMetade = new ArrayList<Evento>();;
-//        List<Evento> segundaMetade = new ArrayList<Evento>();;
-//        if (eventos.size() > 2) {
-//            int divisao = eventos.size() / 2;
-//            primeiraMetade = eventos.subList(0, divisao - 1);
-//            segundaMetade = eventos.subList(divisao, eventos.size() - 1);
-//        }
-//        else if(eventos.size() == 2) {
-//            primeiraMetade.add(eventos.get(0));
-//            segundaMetade.add(eventos.get(1));
-//
-//        }
-//        List<Evento> retorno = new ArrayList<Evento>();
-//        for (int i = 0; i < primeiraMetade.size(); i++) {
-//            if (primeiraMetade.get(i).tempo < segundaMetade.get(i).tempo) {
-//                retorno.add(primeiraMetade.get(i));
-//                retorno.add(segundaMetade.get(i));
-//            } else {
-//                retorno.add(segundaMetade.get(i));
-//                retorno.add(primeiraMetade.get(i));
-//            }
-//        }
-//        return retorno;
-//    }
-
 
 }

@@ -1,0 +1,33 @@
+semente
+
+fila 1
+num servidores
+capacidade fila
+tempo chegada min
+tempo chegada max
+tempo chegada inicial
+tempo atend min
+tempo atend max
+id fila passagem
+possibilidade passagem
+id fila passagem
+possibilidade passagem
+id fila passagem
+possibilidade passagem
+
+fila 2
+num servidores
+capacidade fila
+tempo chegada min
+tempo chegada max
+tempo chegada inicial
+tempo atend min
+tempo atend max
+id fila passagem
+possibilidade passagem
+id fila passagem
+possibilidade passagem
+id fila passagem
+possibilidade passagem
+
+end
