@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Fila {
 
@@ -10,7 +9,7 @@ public class Fila {
     // Quando fila não tiver chegada: tempoChegadaMin, tempoChegadaMax e tempoChegadaInicial serão 0
     private int numServidores, numCapacidade, tempoChegadaMin, tempoChegadaMax, tempoChegadaInicial, tempoAtendimentoMin, tempoAtendimentoMax;
     private Queue<Cliente> fila;
-    private Dictionary<Integer, Double> filasPassagens;
+    private Map<Integer, Double> filasPassagens;
 
     public Fila(int numServidores, int numCapacidade, int tempoChegadaMin, int tempoChegadaMax, int tempoChegadaInicial, int tempoAtendimentoMin, int tempoAtendimentoMax) {
         idFila++;
@@ -26,7 +25,7 @@ public class Fila {
         filasPassagens = new Hashtable<Integer, Double>();
     }
 
-    public Dictionary<Integer, Double> getFilasPassagensIds() {
+    public Map<Integer, Double> getFilasPassagens() {
         return filasPassagens;
     }
 

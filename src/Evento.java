@@ -9,22 +9,19 @@ public class Evento {
     // número relacionado à geracao do número aleatório
     double sorteio;
     // id da fila em questão
-    Fila fila;
+    Fila filaOrigem;
+    // id da fila em questão
+    Fila filaChegada;
     // cliente em questão
     Cliente cliente;
 
-    public Evento(EventoEnum evento, double tempo, double sorteio, Fila fila){
-        this.evento = evento;
-        this.tempo = tempo;
-        this.sorteio = sorteio;
-        this.fila = fila;
-    }
 
-    public Evento(EventoEnum evento, double tempo, double sorteio, Fila fila, Cliente cliente){
+    public Evento(EventoEnum evento, double tempo, double sorteio, Fila filaOrigem, Fila filaChegada, Cliente cliente){
         this.evento = evento;
         this.tempo = tempo;
         this.sorteio = sorteio;
-        this.fila = fila;
+        this.filaOrigem = filaOrigem;
+        this.filaChegada = filaChegada;
         this.cliente = cliente;
     }
 
