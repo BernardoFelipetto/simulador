@@ -99,9 +99,10 @@ public class Simulador {
     private Evento criarProximoEvento(Cliente cliente, double tempoEvento, Fila fila) {
         semente = random();
         Map<Integer, Double> filasPassagens = fila.getFilasPassagens();
+        double prob = 0;
         for(int filaId : filasPassagens.keySet()) {
-            double valor = filasPassagens.get(filaId);
-            if (valor < semente) {
+            prob += filasPassagens.get(filaId);
+            if (semente < prob ) {
                 return criarEventoPassagem(cliente, tempoEvento, fila, this.buscarFilaPorId(filaId));
             }
         }
@@ -110,20 +111,10 @@ public class Simulador {
 
     private Evento criarEventoPassagem(Cliente cliente, double tempoEvento, Fila filaOrigem, Fila filaChegada) {
         semente = random();
-        double sorteio = ((filaOrigem.getTempoAtendimentoMin() - filaOrigem.getTempoAtendimentoMax()) * semente) + filaOrigem.getTempoAtendimentoMin();
+        double sorteio = ((filaOrigem.getTempoAtendimentoMax() - filaOrigem.getTempoAtendimentoMin()) * semente) + filaOrigem.getTempoAtendimentoMin();
         double tempo = tempoEvento + sorteio;
         return new Evento(EventoEnum.PROXIMA, tempo, sorteio, filaOrigem, filaChegada, cliente);
     }
-
-//    private Evento sortearEntreSaidaEPassagem(Cliente cliente, double tempoEvento, Fila fila) {
-//        semente = random();
-//        if (semente < 0.5) {
-//            Fila proximaFila = this.filas.get(this.filas.indexOf(fila) + 1);
-//            return criarEventoPassagem(cliente, tempoEvento, proximaFila);
-//        } else {
-//            return criarEventoSaida(cliente, tempoEvento, fila);
-//        }
-//    }
 
     private Evento criarEventoChegada(double tempoEvento, Fila fila) {
         semente = random();
@@ -152,6 +143,5 @@ public class Simulador {
         semente = semente/m;
         return semente;
     }
-
 
 }
