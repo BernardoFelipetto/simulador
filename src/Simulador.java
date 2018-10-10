@@ -25,7 +25,7 @@ public class Simulador {
         this.agenda = new Agenda();
     }
 
-    public void simularFila(List<Fila> filas) {
+    public void simularFila(List<Fila> filas, int numEventos) {
         this.filas = filas;
         //inserir em agendas eventos de chegadas para as filas com chegadas
         for (Fila fila: filas) {
@@ -41,7 +41,7 @@ public class Simulador {
             }
         }
 
-        for(int i = 0; i<20; i++) {
+        for(int i = 0; i<numEventos; i++) {
             Evento proximoEvento = agenda.getAgendaEventos().remove(0);
             executarEvento(proximoEvento, proximoEvento.filaOrigem, proximoEvento.filaChegada);
         }

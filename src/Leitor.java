@@ -16,9 +16,9 @@ public class Leitor {
         }
         final Reader reader = new FileReader(nameArq);
         final BufferedReader bufferReader = new BufferedReader(reader);
-        String currentLine;
-        currentLine = bufferReader.readLine();
-        configIniciais.semente = new Scanner(currentLine).nextInt();
+        String currentLine = "";
+        configIniciais.semente = new Scanner(bufferReader.readLine()).nextInt();
+        configIniciais.numEventos = new Scanner(bufferReader.readLine()).nextInt();
         configIniciais.filas = new ArrayList<Fila>();
         bufferReader.readLine(); // pular uma linha
         bufferReader.readLine(); // pular uma linha

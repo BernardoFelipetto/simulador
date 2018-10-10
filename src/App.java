@@ -23,7 +23,7 @@ public class App {
 //            filas.add(new Fila(servidores, capacidade, chegadaMin, chegadaMax, atendimentoMin, atendimentoMax));
 //        }
         Simulador simulador = new Simulador(configIniciais.semente);
-        simulador.simularFila(configIniciais.filas);
+        simulador.simularFila(configIniciais.filas, configIniciais.numEventos);
 //
 //        for (int i = 0; i < 20; i++) {
 //            System.out.println (simulador.random());

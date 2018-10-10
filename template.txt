@@ -1,4 +1,5 @@
 semente
+numEventos (critério de parada)
 
 fila 1
 num servidores
