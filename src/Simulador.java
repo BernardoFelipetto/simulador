@@ -1,27 +1,29 @@
 import Enum.EventoEnum;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 public class Simulador {
 
     //const
-    final static double a = 25173;
+    final static double a = 1664525;
     //const
-    final static double b = 13849;
+    final static double b = 1013904223;
     //max value
-    final static double m = 32768;
+    final static double m = 429496729;
     //semente (número utilizado para gerar número randômico)
     double semente;
-
+    double randomGerado;
+    double datenow;
 
     List<Fila> filas;
 
     //lista de eventos
     Agenda agenda;
 
-
     public Simulador(int semente){
-        this.semente = semente;
+        this.datenow = (double) (new Date().getTime()/1000);
+        this.semente = semente * datenow;
         this.agenda = new Agenda();
     }
 
@@ -140,8 +142,8 @@ public class Simulador {
 
     public double random() {
         semente = (a * semente + b) % m;
-        semente = semente/m;
-        return semente;
+        randomGerado = semente/m;
+        return randomGerado;
     }
 
 }
